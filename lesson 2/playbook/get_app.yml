@@ -1,0 +1,13 @@
+#Andersen-devops lesson 2
+#Getting the HelloWorld app from this repository
+---
+- hosts: "deb10"
+
+  tasks:
+  - name: "Getting the helloworld app"
+    subversion:
+      repo: https://github.com/NereySer/Andersen-devops/trunk/lesson%202/python/
+      dest: /home/nerey/python/hlwd/code
+
+...
+
