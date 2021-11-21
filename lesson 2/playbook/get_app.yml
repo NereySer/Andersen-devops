@@ -1,13 +1,41 @@
 #Andersen-devops lesson 2
 #Getting the HelloWorld app from this repository
+#Require the configured sudo
 ---
 - hosts: "deb10"
 
   tasks:
-  - name: "Getting the helloworld app"
+  #Prepare environment
+  - name: "Install pip3 and setuptools"
+    become: yes
+    apt:
+      name:
+      - "python3-pip"
+      - "python-setuptools"
+      state: "latest"
+      update_cache: true
+
+  - name: "Install Flask"
+    become: yes
+    pip:
+      name: "flask"
+      executable: "pip3"
+
+  #Prepare fo obtaining and obtain sources
+  - name: "Install git and SVN"
+    become: yes
+    apt:
+      name:
+      - "git"
+      - "subversion"
+      state: "latest"
+      update_cache: true
+
+  - name: "Get helloworld app"
+    #shell: svn checkout https://github.com/NereySer/Andersen-devops/trunk/lesson%202/python/ /home/nerey/python/hlwd/code/
     subversion:
       repo: https://github.com/NereySer/Andersen-devops/trunk/lesson%202/python/
-      dest: /home/nerey/python/hlwd/code
+      dest: ~/python/hlwd
 
 ...
 
