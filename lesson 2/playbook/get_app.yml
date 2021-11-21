@@ -1,8 +1,8 @@
 #Andersen-devops lesson 2
-#Getting the HelloWorld app from this repository
+#Getting the HelloWorld app from this repository, preparing and running it
 #Require the configured sudo
 ---
-- hosts: "deb10"
+- hosts: "deb10srv"
 
   tasks:
   #Prepare environment
@@ -21,7 +21,7 @@
       name: "flask"
       executable: "pip3"
 
-  #Prepare fo obtaining and obtain sources
+  #Prepare for obtaining and obtain sources
   - name: "Install git and SVN"
     become: yes
     apt:
@@ -32,10 +32,41 @@
       update_cache: true
 
   - name: "Get helloworld app"
-    #shell: svn checkout https://github.com/NereySer/Andersen-devops/trunk/lesson%202/python/ /home/nerey/python/hlwd/code/
     subversion:
       repo: https://github.com/NereySer/Andersen-devops/trunk/lesson%202/python/
       dest: ~/python/hlwd
+
+  #Prepare and run daemon
+  - name: "Copy daemon config"
+    become: yes
+    copy:
+      src: "~/python/hlwd/tools/hlwd.service"
+      dest: "/etc/systemd/system/hlwd.service"
+    notify:
+      - "systemctl reload"
+
+  - name: "Flush handlers"
+    meta: flush_handlers
+
+  - name: "Run daemon"
+    become: yes
+    service:
+      name="hlwd.service"
+      state="started"
+      enabled=yes
+
+  handlers:
+  - name: "systemctl reload"
+    become: yes
+    command: systemctl daemon-reload
+
+  - name: "Restart daemon"
+    become: yes
+    service:
+      name: "hlwd.service"
+      state: "restarted"
+      enabled: yes
+
 
 ...
 
