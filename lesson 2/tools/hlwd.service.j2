@@ -4,7 +4,7 @@ After=multi-user.target
 
 [Service]
 Type=idle
-ExecStart=python3 /home/user/python/hlwd/main.py
+ExecStart=python3 /home/{{ansible_user_id}}/python/hlwd/main.py
 Restart=always
 
 [Install]
