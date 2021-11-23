@@ -56,9 +56,10 @@
       enabled=yes
 
   handlers:
-  - name: "systemctl reload"
+  - name: "systemd reload"
     become: yes
-    command: systemctl daemon-reload
+    systemd:
+      daemon_reload: yes
 
   - name: "Restart daemon"
     become: yes
