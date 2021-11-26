@@ -1,0 +1,47 @@
+#!/bin/bash
+
+while [ -n "$1" ] ; do
+  case "$1" in
+    -p) prog=$2
+      shift ;;
+    -n) num=$2
+      shift ;;
+  esac
+
+  shift
+done
+
+if [ -z "$prog" ] ; then
+  echo "No program specified. Use key -p to specify program name or PID"
+  exit 1
+fi
+
+#Get all the connections
+connections=$(sudo netstat -tunapl)
+
+#Get only IP for target app
+if [[ $prog =~ ^[0-9]+$ ]] ; then
+  ips=$(awk '/'"$prog"'\// {print $5}' <<< $connections | cut -d: -f1)
+else
+  ips=$(awk '/\/'"$prog"'/ {print $5}' <<< $connections | cut -d: -f1)
+fi
+
+#Sort and delete repeats
+ips=$(sort -u <<< $ips)
+
+#Filter non-ip
+ips=$(grep -oP '(\d+\.){3}\d+' <<< $ips)
+
+if [ -n "$num" ] ; then
+  #Cut necessary count
+  ips=$(tail -n"$num" <<< $ips)
+fi
+
+while read IP ; do
+
+  if ! [ "$IP" == '' ] ; then
+    whois $IP | awk -F':' '/^Organization/ {print $2}'
+  fi
+
+done <<< $ips
+
