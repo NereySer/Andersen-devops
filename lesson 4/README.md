@@ -4,9 +4,9 @@ Here the link
 http://t.me/AndersenLessons_Nerey_bot
 
 ## Available commands
-/git - return link to this git
-/tasks - return a list of completed lesson tasks
-/task# where # is number of the task - return link to the folder with completed task
+- /git - return link to this git
+- /tasks - return a list of completed lesson tasks
+- /task# where # is number of the task - return link to the folder with completed task
 
 # TIL
 Today I've learned basic information about IDEs: overview, some advantages and the most commonly used ones. 
