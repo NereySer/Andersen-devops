@@ -15,7 +15,6 @@ import (
 
 func telegramBot() {
 
-    //Создаем бота
     bot, err := tgbotapi.NewBotAPI(os.Getenv("API_TOKEN"))
     if err != nil {
         panic(err)
@@ -29,11 +28,9 @@ func telegramBot() {
 
     var rLesson = regexp.MustCompile(os.Getenv("GIT_LESSONS_REGEXP"))
 
-    //Устанавливаем время обновления
     u := tgbotapi.NewUpdate(0)
     u.Timeout = 60
 
-    //Получаем обновления от бота 
     updates := bot.GetUpdatesChan(u)
 
     for update := range updates {
@@ -41,7 +38,6 @@ func telegramBot() {
             continue
         }
 
-        //Проверяем что от пользователья пришло именно текстовое сообщение
         if reflect.TypeOf(update.Message.Text).Kind() == reflect.String && update.Message.Text != "" {
 
             switch {
@@ -112,8 +108,7 @@ func telegramBot() {
             }
         } else {
 
-            //Отправлем сообщение
-            msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Use the words for search.")
+            msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Please use valid command. Use /help to get more information.")
             bot.Send(msg)
         }
     }
@@ -133,6 +128,5 @@ func main() {
 
     time.Sleep(1 * time.Second)
 
-    //Вызываем бота
     telegramBot()
 }
