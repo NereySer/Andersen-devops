@@ -16,7 +16,7 @@ Code require the ../tlg_bot_cred.env (/home/<user>/go/telegram-bot/tlg_bot_cred.
 Uses ansible role abdennour.golang,v1.0.12
 
 ## Running
-Runs with the go run command witohut compiling
+Runs with the go run command without compiling. Such way gives more experience and interest. It is not very complicated to change this behavior to run compiled version.
 
 # TIL
 Today I've learned basic information about IDEs: overview, some advantages and the most commonly used ones. 
