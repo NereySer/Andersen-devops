@@ -1,0 +1,72 @@
+#Andersen-devops lesson 4
+#Getting the bot app from this repository, preparing and running it
+#Require the configured sudo and installed python on the target system
+#Require ansible role abdennour.golang,v1.0.12 installed on the host
+---
+- hosts: "gcloud"
+
+  tasks:
+  #Prepare environment
+  - name: "Install packages"
+    become: yes
+    apt:
+      name:
+      - "git"
+      - "subversion"
+      - "golang"
+      state: "latest"
+      update_cache: true
+
+  - name: "Install go packages"
+    become: yes
+    import_role:
+      name: "abdennour.golang"
+    vars:
+      golang_packages:
+      - "github.com/Syfaro/telegram-bot-api"
+      - "github.com/joho/godotenv"
+      golang_users:
+      - "{{ansible_user_id}}"
+
+  - name: "Get telegram bot"
+    subversion:
+      repo: https://github.com/NereySer/Andersen-devops/trunk/lesson%204/code/
+      dest: ~/go/telegram-bot/code
+    notify:
+      - "Restart daemon"
+
+  #Prepare and run daemon
+  - name: "Copy daemon config"
+    become: yes
+    template:
+      src: "../tools/telegram-bot.service.j2"
+      dest: "/etc/systemd/system/telegram-bot.service"
+    notify:
+      - "systemd reload"
+
+  - name: "Flush handlers"
+    meta: flush_handlers
+
+  - name: "Run daemon"
+    become: yes
+    service:
+      name="telegram-bot.service"
+      state="started"
+      enabled=yes
+
+  handlers:
+  - name: "systemd reload"
+    become: yes
+    systemd:
+      daemon_reload: yes
+
+  - name: "Restart daemon"
+    become: yes
+    service:
+      name: "telegram-bot.service"
+      state: "restarted"
+      enabled: yes
+
+
+...
+

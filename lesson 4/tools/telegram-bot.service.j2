@@ -1,0 +1,16 @@
+[Unit]
+Description=Telegram bot
+After=multi-user.target
+
+[Service]
+User={{ansible_user_id}}
+Group={{golang_group}}
+Environment=GOPATH={{golang_gopath}}
+
+Type=idle
+WorkingDirectory=/home/{{ansible_user_id}}/go/telegram-bot/code
+ExecStart=go run /home/{{ansible_user_id}}/go/telegram-bot/code/main.go
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
