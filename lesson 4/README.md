@@ -8,6 +8,9 @@ http://t.me/AndersenLessons_Nerey_bot
 - /tasks - return a list of completed lesson tasks
 - /task# where # is number of the task - return link to the folder with completed task
 
+## Reqirenments
+Code require the ../tlg_bot_cred.env file with variable API_TOKEN containing telegram bot access token specified in it
+
 # TIL
 Today I've learned basic information about IDEs: overview, some advantages and the most commonly used ones. 
 I was reminded of the difference between compiled and interpreted programming languages with examples 

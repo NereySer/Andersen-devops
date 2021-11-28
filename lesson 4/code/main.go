@@ -8,6 +8,8 @@ import (
     "os"
     "reflect"
     "time"
+    "os/exec"
+//    "strings"
 //    "log"
 )
 
@@ -24,6 +26,8 @@ func telegramBot() {
     var rCommandGit = regexp.MustCompile("^/git$")
     var rCommandTasks = regexp.MustCompile("^/tasks$")
     var rCommandTask = regexp.MustCompile("^/task([0-9]*)$")
+
+    var rLesson = regexp.MustCompile(os.Getenv("GIT_LESSONS_REGEXP"))
 
     //Устанавливаем время обновления
     u := tgbotapi.NewUpdate(0)
@@ -62,8 +66,30 @@ func telegramBot() {
 
             case rCommandTasks.MatchString(update.Message.Text):
 
-                msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Tasks under construction")
-                bot.Send(msg)
+                stdout, err := exec.Command("svn", "list", os.Getenv("GIT_LESSONS")).Output()
+
+                if err != nil {
+                    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "There is error occured when obtaining tasks list: " + err.Error())
+                    bot.Send(msg)
+                } else {
+                    result := rLesson.FindAllStringSubmatch(string(stdout), -1)
+
+                    if result != nil {
+                        msgtxt := "There is the list of the completed tasks and commands to get the link to it's folder\n"
+
+                        for _, element := range result {
+                            msgtxt += element[1]+" /task"+element[2]+"\n"
+                        }
+
+                        msg := tgbotapi.NewMessage(update.Message.Chat.ID, msgtxt)
+                        bot.Send(msg)
+                    } else {
+                        msg := tgbotapi.NewMessage(update.Message.Chat.ID, "Sorry, there is no completed tasks available")
+                        bot.Send(msg)
+                    }
+                }
+
+
 
             case rCommandTask.MatchString(update.Message.Text):
 
@@ -94,12 +120,13 @@ func telegramBot() {
 }
 
 func main() {
+
     err := godotenv.Load(".env")
     if err != nil {
         panic(err)
     }
 
-    err = godotenv.Load("../../tlg_bot_cred.env")
+    err = godotenv.Load("../tlg_bot_cred.env")
     if err != nil {
         panic(err)
     }
