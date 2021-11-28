@@ -5,11 +5,10 @@ After=multi-user.target
 [Service]
 User={{ansible_user_id}}
 Group={{golang_group}}
-Environment=GOPATH={{golang_gopath}}
 
 Type=idle
-WorkingDirectory=/home/{{ansible_user_id}}/go/telegram-bot/code
-ExecStart=go run /home/{{ansible_user_id}}/go/telegram-bot/code/main.go
+WorkingDirectory=/home/{{ansible_user_id}}/go/telegram-bot/bin
+ExecStart=/home/{{ansible_user_id}}/go/telegram-bot/bin/telegram-bot
 Restart=always
 
 [Install]

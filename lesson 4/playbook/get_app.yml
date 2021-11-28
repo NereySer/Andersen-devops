@@ -33,6 +33,20 @@
       repo: https://github.com/NereySer/Andersen-devops/trunk/lesson%204/code/
       dest: ~/go/telegram-bot/code
     notify:
+      - "Stop daemon"
+      - "Build app"
+
+  - name: Create bin directory
+    file:
+      path: ~/go/telegram-bot/bin
+      state: directory
+
+  - name: Copy the .env file to bin dir if changed
+    copy:
+      src: ~/go/telegram-bot/code/.env
+      dest: ~/go/telegram-bot/bin/.env
+      remote_src: yes
+    notify:
       - "Restart daemon"
 
   #Prepare and run daemon
@@ -60,13 +74,17 @@
     systemd:
       daemon_reload: yes
 
-  - name: "Restart daemon"
+  - name: "Stop daemon"
     become: yes
     service:
-      name: "telegram-bot.service"
-      state: "restarted"
-      enabled: yes
+      name="telegram-bot.service"
+      state="stopped"
+      enabled=yes
 
+  - name: "Build app"
+    command: "env GOPATH={{golang_gopath}} go build -o ../bin/telegram-bot main.go"
+    args:
+      chdir: ~/go/telegram-bot/code 
 
 ...
 
