@@ -9,7 +9,14 @@ http://t.me/AndersenLessons_Nerey_bot
 - /task# where # is number of the task - return link to the folder with completed task
 
 ## Reqirenments
-Code require the ../tlg_bot_cred.env file with variable API_TOKEN containing telegram bot access token specified in it
+Code require the ../tlg_bot_cred.env (/home/<user>/go/telegram-bot/tlg_bot_cred.env) file with variable API_TOKEN containing telegram bot access token specified in it
+
+# Automatic deployment
+## Dependencies
+Uses ansible role abdennour.golang,v1.0.12
+
+## Running
+Runs with the go run command witohut compiling
 
 # TIL
 Today I've learned basic information about IDEs: overview, some advantages and the most commonly used ones. 
