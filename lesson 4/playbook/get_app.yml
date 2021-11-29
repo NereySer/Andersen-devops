@@ -64,9 +64,9 @@
   - name: "Run daemon"
     become: yes
     service:
-      name="telegram-bot.service"
-      state="started"
-      enabled=yes
+      name: "telegram-bot.service"
+      state: "started"
+      enabled: yes
 
   handlers:
   - name: "systemd reload"
@@ -77,14 +77,16 @@
   - name: "Stop daemon"
     become: yes
     service:
-      name="telegram-bot.service"
-      state="stopped"
-      enabled=yes
+      name: "telegram-bot.service"
+      state: "stopped"
+      enabled: yes
 
   - name: "Build app"
-    command: "env GOPATH={{golang_gopath}} go build -o ../bin/telegram-bot main.go"
+    command: "go build -o ../bin/telegram-bot main.go"
     args:
       chdir: ~/go/telegram-bot/code 
+    environment:
+      GOPATH: "{{golang_gopath}}"
 
 ...
 
