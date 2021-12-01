@@ -39,9 +39,9 @@ connections=$(netstat -tunapl 2>/dev/null)
 
 #Get only IP for target app
 if [[ $prog =~ ^[0-9]+$ ]] ; then
-  ips=$(awk '/'"$prog"'\// {print $5}' <<< $connections | cut -d: -f1)
+  ips=$(awk '$7~/'"$prog"'\// {print $5}' <<< $connections | cut -d: -f1)
 else
-  ips=$(awk '/\/'"$prog"'/ {print $5}' <<< $connections | cut -d: -f1)
+  ips=$(awk '$7~/\/'"$prog"'/ {print $5}' <<< $connections | cut -d: -f1)
 fi
 
 #Sort and delete repeats
