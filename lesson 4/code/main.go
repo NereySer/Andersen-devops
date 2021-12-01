@@ -65,13 +65,13 @@ func telegramBot() {
                 stdout, err := exec.Command("svn", "list", os.Getenv("GIT_LESSONS")).Output()
 
                 if err != nil {
-                    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "There is error occured when obtaining tasks list: " + err.Error())
+                    msg := tgbotapi.NewMessage(update.Message.Chat.ID, "There is error occured while obtaining tasks list: " + err.Error())
                     bot.Send(msg)
                 } else {
                     result := rLesson.FindAllStringSubmatch(string(stdout), -1)
 
                     if result != nil {
-                        msgtxt := "There is the list of the completed tasks and commands to get the link to it's folder\n"
+                        msgtxt := "Here is the list of the completed tasks with commands to get the link to it's folder:\n"
 
                         for _, element := range result {
                             msgtxt += element[1]+" /task"+element[2]+"\n"
