@@ -1,23 +1,41 @@
-#!/bin/bash
+\#!/bin/bash
+
+#Set default value
+whois_info="Organization"
 
 while [ -n "$1" ] ; do
   case "$1" in
-    -p) prog=$2
-      shift ;;
-    -n) num=$2
-      shift ;;
+    -n)
+      num=$2
+      shift
+      ;;
+    -w)
+      whois_info=$2
+      shift
+      ;;
+    *)
+      if [ -n "$prog" ] && [ -z "$warning_more_than_one_is_shown" ] ; then
+        echo "Warning: more than one program specified. Using the last."
+        warning_more_than_one_is_shown=1
+      fi
+      prog=$1
+      ;;
   esac
 
   shift
 done
 
 if [ -z "$prog" ] ; then
-  echo "No program specified. Use key -p to specify program name or PID"
+  echo "No program specified. Please pass package name or PID as a parameter"
   exit 1
 fi
 
+if [ "$EUID" -ne 0 ]
+  then echo "Warning: not running as root. Possibly not all the information will be shown"
+fi
+
 #Get all the connections
-connections=$(sudo netstat -tunapl)
+connections=$(netstat -tunapl 2>/dev/null)
 
 #Get only IP for target app
 if [[ $prog =~ ^[0-9]+$ ]] ; then
@@ -40,7 +58,7 @@ fi
 while read IP ; do
 
   if ! [ "$IP" == '' ] ; then
-    whois $IP | awk -F':' '/^Organization/ {print $2}'
+    whois $IP | awk -F':' '/^'"$whois_info"'/ {print $2}'
   fi
 
 done <<< $ips
