@@ -1,7 +1,8 @@
 #!/bin/bash
 
-#Set default value
+#Set default values
 whois_info="Organization"
+state="all"
 
 while [ -n "$1" ] ; do
   case "$1" in
@@ -11,6 +12,10 @@ while [ -n "$1" ] ; do
       ;;
     -w)
       whois_info=$2
+      shift
+      ;;
+    -s)
+      state=$2
       shift
       ;;
     *)
@@ -35,13 +40,13 @@ if [ "$EUID" -ne 0 ]
 fi
 
 #Get all the connections
-connections=$(netstat -tunapl 2>/dev/null)
+connections=$(ss -tunp state $state 2>/dev/null)
 
 #Get only IP for target app
 if [[ $prog =~ ^[0-9]+$ ]] ; then
-  ips=$(awk '$7~/'"$prog"'\// {print $5}' <<< $connections | cut -d: -f1)
+  ips=$(awk '$(NF)~/^users:\(\("[a-zA-Z-_\.]+",pid='"$prog"',fd=[0-9]+\)\)$/ {print $(NF-1)}' <<< $connections | cut -d: -f1)
 else
-  ips=$(awk '$7~/\/'"$prog"'/ {print $5}' <<< $connections | cut -d: -f1)
+  ips=$(awk '$(NF)~/^users:\(\("'"$prog"'[a-zA-Z-_\.]*",pid=[0-9]+,fd=[0-9]+\)\)$/ {print $(NF-1)}' <<< $connections | cut -d: -f1)
 fi
 
 #Sort and delete repeats

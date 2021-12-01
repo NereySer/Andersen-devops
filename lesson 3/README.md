@@ -3,6 +3,7 @@ The script is used to display organisations to which certain application is have
 - Pass name or PID as a parameter, it is required. If such parameters more than one, only last is used.
 - Key -n is used to set an amount of displayed lines. Optional, default is to show all.
 - Key -w is used to set specific information from whis is needed. Optional, default is Organisation.
+- Key -s is used to specify connection status as used in ss filter. Optional, default is all.
 
 # TIL
 Today I've learned basic information about Linux scripting and more detailed information about software configuration management. Also I've seen example of Ansible playbook development and usage.
