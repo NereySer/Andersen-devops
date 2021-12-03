@@ -52,7 +52,7 @@ fi
 #Sort and delete repeats
 ips=$(sort -u <<< $ips)
 
-#Filter non-ip
+#Get only ip
 ips=$(grep -oP '(\d+\.){3}\d+' <<< $ips)
 
 if [ -n "$num" ] ; then
@@ -60,11 +60,20 @@ if [ -n "$num" ] ; then
   ips=$(tail -n"$num" <<< $ips)
 fi
 
+results=""
+
 while read IP ; do
 
   if ! [ "$IP" == '' ] ; then
-    whois $IP | awk -F':' '/^'"$whois_info"'/ {print $2}'
+    results+=$(whois $IP | awk -F':' '/^'"$whois_info"'/ {print $2}')$'\n'
   fi
 
 done <<< $ips
 
+#Cut empty strings
+results=$(awk 'NF' <<< $results)
+#Count and sort
+results=$(uniq -c <<< $results)
+results=$(sort -nr <<< $results)
+
+echo "$results"
