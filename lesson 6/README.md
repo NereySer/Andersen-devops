@@ -1,8 +1,4 @@
 # Docker image
-## Building
-Build was made at the directory `git/Andersen-devops` with the next command: 
-`docker build -t nereyser/andersen_py_helloworld -f lesson\ 6/Dockerfile .`
-
 ## Docker hub
 Built image available at https://hub.docker.com/repository/docker/nereyser/andersen_py_helloworld or as tagged: `nereyser/andersen_py_helloworld`
 
