@@ -1,12 +1,12 @@
-FROM debian as builder
+FROM python:3.6-slim as builder
 
 RUN apt-get update && \
     apt-get -y install \
-      python3 \
       python3-pip \
       zlib1g-dev \
-      gcc libc-dev && \
-    pip3 install \
+      gcc libc-dev \
+      upx && \
+    pip3 install --upgrade pip \
       flask \
       pyinstaller \
       staticx \
