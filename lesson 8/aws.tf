@@ -11,11 +11,15 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region  = "us-west-2"
+  region  = var.region
 }
 
 variable "AWS_ACCESS_KEY_ID" {}
 variable "AWS_SECRET_ACCESS_KEY" {}
+
+variable "region" {
+  default = "us-west-2"
+}
 
 variable "image_id" {
   default = "ami-0c7ea5497c02abcaf" # Debian 10
@@ -46,7 +50,7 @@ resource "aws_instance" "applications" {
 sudo apt update && sudo apt install -y nginx
 export AWS_ACCESS_KEY_ID=${var.AWS_ACCESS_KEY_ID}
 export AWS_SECRET_ACCESS_KEY=${var.AWS_SECRET_ACCESS_KEY}
-export AWS_DEFAULT_REGION=us-west-2
+export AWS_DEFAULT_REGION=${var.region}
 sudo rm /var/www/html/*
 aws s3 cp s3://mybucket.ru/index.html /tmp/index.html
 sudo mv /tmp/index.html /var/www/html/index.html
