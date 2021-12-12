@@ -14,6 +14,9 @@ provider "aws" {
   region  = "us-west-2"
 }
 
+variable "AWS_ACCESS_KEY_ID" {}
+variable "AWS_SECRET_ACCESS_KEY" {}
+
 variable "image_id" {
   default = "ami-0c7ea5497c02abcaf" # Debian 10
 }
@@ -41,8 +44,8 @@ resource "aws_instance" "applications" {
   user_data              = <<EOF
 #!/bin/bash
 sudo apt update && sudo apt install -y nginx
-export AWS_ACCESS_KEY_ID=<...placeholder...>
-export AWS_SECRET_ACCESS_KEY=<...placeholder...>
+export AWS_ACCESS_KEY_ID=${var.AWS_ACCESS_KEY_ID}
+export AWS_SECRET_ACCESS_KEY=${var.AWS_SECRET_ACCESS_KEY}
 export AWS_DEFAULT_REGION=us-west-2
 sudo rm /var/www/html/*
 aws s3 cp s3://mybucket.ru/index.html /tmp/index.html
