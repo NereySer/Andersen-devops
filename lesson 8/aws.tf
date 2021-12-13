@@ -108,9 +108,31 @@ resource "aws_security_group" "allow_app_traffic" {
 
 }
 
+resource "aws_security_group" "allow_lb_traffic" {
+  name   = "allow_lb_traffic"
+  vpc_id = var.vpc_id
+
+  ingress {
+    description = "app from anywhere"
+    from_port   = 80
+    to_port     = 80
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+}
+
 resource "aws_lb" "AppLB" {
+  name = "applb"
   internal           = false
   load_balancer_type = "application"
+  security_groups    = ["${aws_security_group.allow_lb_traffic.id}"]
   subnets            = var.subnets_id
 }
 
