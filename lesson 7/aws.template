@@ -1,0 +1,141 @@
+AWSTemplateFormatVersion: 2010-09-09
+Parameters:
+  AWSaccessKeyID:
+    Type: String
+  AWSsecretAccessKey:
+    Type: String
+    NoEcho: true
+Resources:
+  testVPC:
+    Type: 'AWS::EC2::VPC'
+    Properties:
+      CidrBlock: 172.31.0.0/16
+  subnA:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref testVPC
+      AvailabilityZone: us-west-2a
+      CidrBlock: 172.31.0.0/24
+      MapPublicIpOnLaunch: true
+  subnB:
+    Type: 'AWS::EC2::Subnet'
+    Properties:
+      VpcId: !Ref testVPC
+      AvailabilityZone: us-west-2b
+      CidrBlock: 172.31.1.0/24
+      MapPublicIpOnLaunch: true
+  AppA:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      SecurityGroupIds:
+        - !Ref AllowApp
+      AvailabilityZone: us-west-2a
+      SubnetId: !Ref subnA
+      ImageId: ami-0c7ea5497c02abcaf
+      InstanceType: t2.micro
+      UserData:
+        'Fn::Base64': !Sub |
+            #!/bin/bash
+            sudo apt update && sudo apt install -y nginx
+            export AWS_ACCESS_KEY_ID=${AWSaccessKeyID}
+            export AWS_SECRET_ACCESS_KEY=${AWSsecretAccessKey}
+            export AWS_DEFAULT_REGION=us-west-2
+            sudo rm /var/www/html/*
+            aws s3 cp s3://mybucket.ru/index.html /tmp/index.html
+            sudo mv /tmp/index.html /var/www/html/index.html
+            sudo systemctl restart nginx
+  AppB:
+    Type: 'AWS::EC2::Instance'
+    Properties:
+      SecurityGroupIds:
+        - !Ref AllowApp
+      AvailabilityZone: us-west-2b
+      SubnetId: !Ref subnB
+      ImageId: ami-0c7ea5497c02abcaf
+      InstanceType: t2.micro
+      UserData:
+        'Fn::Base64': !Sub |
+            #!/bin/bash
+            sudo apt update && sudo apt install -y nginx
+            export AWS_ACCESS_KEY_ID=${AWSaccessKeyID}
+            export AWS_SECRET_ACCESS_KEY=${AWSsecretAccessKey}
+            export AWS_DEFAULT_REGION=us-west-2
+            sudo rm /var/www/html/*
+            aws s3 cp s3://mybucket.ru/index.html /tmp/index.html
+            sudo mv /tmp/index.html /var/www/html/index.html
+            sudo systemctl restart nginx
+  targApp:
+    Type: 'AWS::ElasticLoadBalancingV2::TargetGroup'
+    Properties:
+      Port: 80
+      Protocol: HTTP
+      VpcId: !Ref testVPC
+      Targets:
+        - Id: !Ref AppA
+          Port: 80
+        - Id: !Ref AppB
+          Port: 80
+  testALB:
+    Type: 'AWS::ElasticLoadBalancingV2::LoadBalancer'
+    Properties:
+      Scheme: internet-facing
+      Type: application
+      SubnetMappings:
+        - SubnetId: !Ref subnB
+        - SubnetId: !Ref subnA
+      SecurityGroups:
+        - !Ref AllowALB
+  AppListener:
+    Type: 'AWS::ElasticLoadBalancingV2::Listener'
+    Properties:
+      LoadBalancerArn: !Ref testALB
+      Port: 80
+      Protocol: HTTP
+      DefaultActions:
+        - Type: forward
+          TargetGroupArn: !Ref targApp
+  AllowApp:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow traffic for HTTP application and SSH
+      VpcId: !Ref testVPC
+      SecurityGroupIngress:
+        - Description: app from anywhere
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+        - Description: ssh
+          IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          FromPort: 0
+          ToPort: 0
+          CidrIp: 0.0.0.0/0
+  AllowALB:
+    Type: 'AWS::EC2::SecurityGroup'
+    Properties:
+      GroupDescription: Allow traffic for HTTP balancer
+      VpcId: !Ref testVPC
+      SecurityGroupIngress:
+        - Description: app from anywhere
+          IpProtocol: tcp
+          FromPort: 80
+          ToPort: 80
+          CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+        - IpProtocol: '-1'
+          FromPort: 0
+          ToPort: 0
+          CidrIp: 0.0.0.0/0
+  EC2IG56CGK:
+    Type: 'AWS::EC2::InternetGateway'
+    Properties: {}
+  EC2VPCGGJJF:
+    Type: 'AWS::EC2::VPCGatewayAttachment'
+    Properties:
+      InternetGatewayId: !Ref EC2IG56CGK
+      VpcId: !Ref testVPC
