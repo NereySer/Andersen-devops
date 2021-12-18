@@ -131,11 +131,32 @@ Resources:
           FromPort: 0
           ToPort: 0
           CidrIp: 0.0.0.0/0
-  EC2IG56CGK:
+  testVPCgateway:
     Type: 'AWS::EC2::InternetGateway'
     Properties: {}
-  EC2VPCGGJJF:
+  testVPCgatewayAttach:
     Type: 'AWS::EC2::VPCGatewayAttachment'
     Properties:
-      InternetGatewayId: !Ref EC2IG56CGK
+      InternetGatewayId: !Ref testVPCgateway
       VpcId: !Ref testVPC
+  PublicRouteTable:
+    Type: 'AWS::EC2::RouteTable'
+    Properties:
+      VpcId: !Ref testVPC
+  DefaultPublicRoute:
+    Type: 'AWS::EC2::Route'
+    DependsOn: testVPCgatewayAttach
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref testVPCgateway
+  SubnARouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref subnA
+  SubnBRouteTableAssociation:
+    Type: 'AWS::EC2::SubnetRouteTableAssociation'
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref subnB
