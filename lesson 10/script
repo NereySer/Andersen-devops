@@ -5,9 +5,14 @@ num=1
 mul=24*60*60
 inv=0
 table=0
+owner="self"
 
 while [ -n "$1" ] ; do
   case "$1" in
+    -o)
+      owner=$2
+      shift
+      ;;
     -n)
       num=$2
       shift
@@ -40,4 +45,4 @@ done
 
 targtime=$(date -d "@$(($(date +%s) - $num*$mul))" -Iseconds)
 
-aws ec2 describe-snapshots --owner-ids self     --query "Snapshots[?(StartTime"$(if [ $inv -eq 0 ] ; then echo "<=" ; else echo ">=" ; fi)"'"$targtime"')]|[].{ID:SnapshotId,Time:StartTime,Size:VolumeSize}" $(if [ $table -eq 1 ] ; then echo "--output table" ; fi)
+aws ec2 describe-snapshots --owner-ids "$owner" --query "Snapshots[?(StartTime"$(if [ $inv -eq 0 ] ; then echo "<=" ; else echo ">=" ; fi)"'"$targtime"')]|[].{ID:SnapshotId,Time:StartTime,Size:VolumeSize}" $(if [ $table -eq 1 ] ; then echo "--output table" ; fi)
