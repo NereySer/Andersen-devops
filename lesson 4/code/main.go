@@ -9,6 +9,8 @@ import (
     "reflect"
     "time"
     "os/exec"
+    "sort"
+    "strconv"
 //    "strings"
 //    "log"
 )
@@ -72,6 +74,16 @@ func telegramBot() {
 
                     if result != nil {
                         msgtxt := "Here is the list of the completed tasks with commands to get the link to it's folder:\n"
+
+                        sort.Slice(result, func(i, j int) bool {
+                            var r1, r2 int
+                            var err error
+
+                            if r1, err = strconv.Atoi(result[i][2]); err != nil { return true }
+                            if r2, err = strconv.Atoi(result[j][2]); err != nil { return false }
+
+                            return r1 < r2
+                        })
 
                         for _, element := range result {
                             msgtxt += element[1]+" /task"+element[2]+"\n"
