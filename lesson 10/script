@@ -1,0 +1,43 @@
+#!/bin/bash
+
+#Set default values
+num=1
+mul=24*60*60
+inv=0
+table=0
+
+while [ -n "$1" ] ; do
+  case "$1" in
+    -n)
+      num=$2
+      shift
+      ;;
+    -d)
+      mul=24*60*60
+      ;;
+    -h)
+      mul=60*60
+      ;;
+    -m)
+      mul=60
+      ;;
+    -s)
+      mul=1
+      ;;
+    -i)
+      inv=1
+      ;;
+    -t)
+      table=1
+      ;;
+    *)
+      echo "Unknown parameter: "$1
+      ;;
+  esac
+
+  shift
+done
+
+targtime=$(date -d "@$(($(date +%s) - $num*$mul))" -Iseconds)
+
+aws ec2 describe-snapshots --owner-ids self     --query "Snapshots[?(StartTime"$(if [ $inv -eq 0 ] ; then echo "<=" ; else echo ">=" ; fi)"'"$targtime"')]|[].{ID:SnapshotId,Time:StartTime,Size:VolumeSize}" $(if [ $table -eq 1 ] ; then echo "--output table" ; fi)
