@@ -5,6 +5,7 @@ The script is used to display information about EBS snapshots: ID, size and Star
 - Key -i is used to invert selection to younger. If not specified, selection of older.
 - Key -t is used to switch output to table. If not specified, output in json format.
 - Key -o is used to specify owner ID (or IDs as in the --owner-ids option of the aws ec2 describe-snapshots command). Optional, default is self.
+
 Tip: to get all the snapshots, use -n 0.
 
 # TIL
