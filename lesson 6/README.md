@@ -1,4 +1,7 @@
 # Docker image
+## Building
+The image is can be built both by using the command `docker build .` or by using the script `rebuild`. The script also purges old images and containers and runs the container.
+
 ## Docker hub
 Built image available at https://hub.docker.com/repository/docker/nereyser/andersen_py_helloworld or as tagged: `nereyser/andersen_py_helloworld`
 
