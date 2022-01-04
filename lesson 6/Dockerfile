@@ -10,21 +10,21 @@ RUN apt-get update && \
       flask \
       pyinstaller \
       staticx \
-      patchelf-wrapper
+      patchelf-wrapper &&\
+    mkdir -p /opt/python/tmp
 
 WORKDIR /opt/python/
+LABEL app=py_hlwd_builder
 ADD main.py .
 
 RUN pyinstaller -F -s main.py && \
     staticx -l /lib/x86_64-linux-gnu/libgcc_s.so.1 --strip dist/main dist/main_app
 
-RUN mkdir tmp
-
-
 FROM scratch
+LABEL app=py_hlwd
 
 COPY --from=builder /opt/python/dist/main_app /bin/
-COPY --from=builder tmp /tmp
+COPY --from=builder /opt/python/tmp /tmp
 
 EXPOSE 5000
 CMD ["/bin/main_app"]
