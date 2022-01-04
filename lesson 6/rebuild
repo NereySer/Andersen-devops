@@ -1,0 +1,7 @@
+sudo docker build -t nereyser/andersen_py_helloworld . 
+if [ $? -eq 0 ]; then
+  sudo docker rm -f py_hlwd 
+  sudo docker run -d --restart unless-stopped -p 5000:5000 --name py_hlwd nereyser/andersen_py_helloworld && \
+    sudo docker image prune -f --filter "label=app=py_hlwd" && \
+    sudo docker image prune -f --filter "label=app=py_hlwd_builder"
+fi
