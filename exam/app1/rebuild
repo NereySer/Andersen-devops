@@ -1,6 +1,6 @@
-svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app1/main.py > main.py && \
-  svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app1/Dockerfile > Dockerfile && \
-  sudo docker build -t nereyser/andersen_ex_py_helloworld . 
+svn checkout https://github.com/NereySer/Andersen-devops/trunk/exam/app1/payload ./payload
+  sudo docker build -t python_builder payload/builder/. && \
+  sudo docker build -t nereyser/andersen_ex_py_helloworld payload/. 
 
 if [ $? -eq 0 ]; then
   sudo docker rm -f ex_py_hlwd 
