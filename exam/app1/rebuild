@@ -1,0 +1,10 @@
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app1/main.py > main.py && \
+  svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app1/Dockerfile > Dockerfile && \
+  sudo docker build -t nereyser/andersen_ex_py_helloworld . 
+
+if [ $? -eq 0 ]; then
+  sudo docker rm -f ex_py_hlwd 
+  sudo docker run -d --restart unless-stopped -p 80:5000 --name ex_py_hlwd nereyser/andersen_ex_py_helloworld && \
+    sudo docker image prune -f --filter "label=app=ex_py_hlwd" && \
+    sudo docker image prune -f --filter "label=app=py_hlwd_builder"
+fi
