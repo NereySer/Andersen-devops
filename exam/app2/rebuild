@@ -1,0 +1,8 @@
+svn checkout https://github.com/NereySer/Andersen-devops/trunk/exam/app2/payload ./payload
+  sudo docker build -t nereyser/andersen_ex_php_helloworld payload/. 
+
+if [ $? -eq 0 ]; then
+  sudo docker rm -f ex_php_hlwd 
+  sudo docker run -d --restart unless-stopped -p 81:80 --name ex_php_hlwd nereyser/andersen_ex_php_helloworld && \
+    sudo docker image prune -f --filter "label=app=ex_php_hlwd"
+fi
