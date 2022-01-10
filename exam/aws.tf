@@ -58,7 +58,12 @@ resource "aws_instance" "applications" {
   tags                   = {}
   user_data              = <<EOF
 #!/bin/bash
-sudo apt update && sudo apt install -y subversion docker.io
+sudo apt update && sudo apt install -y nginx subversion docker.io
+
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/default > /etc/nginx/sites-available/default
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/index.nginx-debian.html > /var/www/html/index.nginx-debian.html
+sudo service nginx restart
+
 su admin
 
 mkdir ~/app1
@@ -84,7 +89,7 @@ resource "aws_security_group" "allow_app_traffic" {
   ingress {
     description = "app from anywhere"
     from_port   = 80
-    to_port     = 81
+    to_port     = 80
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
