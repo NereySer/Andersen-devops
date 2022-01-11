@@ -1,0 +1,5 @@
+#!/bin/bash
+mkdir ~/$1 && cd $_
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/$1/rebuild > ./rebuild
+sudo chmod +x rebuild
+./rebuild
