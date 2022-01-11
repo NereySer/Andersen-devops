@@ -1,4 +1,4 @@
-<mxfile host="app.diagrams.net" modified="2022-01-11T10:03:32.376Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4450.0 Iron Safari/537.36" etag="aYKfNCh7sAAwJiQcH6TW" version="16.2.4" type="github" pages="2">
+<mxfile host="app.diagrams.net" modified="2022-01-11T10:52:57.649Z" agent="5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4450.0 Iron Safari/537.36" etag="AfHg5e_YzZ0fDEsPoLLU" version="16.2.4" type="github" pages="2">
   <diagram id="oL0CLLXPn3ZyDc6CmzTw" name="Infrastructure">
     <mxGraphModel dx="1422" dy="772" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
       <root>
@@ -99,7 +99,7 @@
       <root>
         <mxCell id="eEeJIrHdnRT-AjirQEaA-0" />
         <mxCell id="eEeJIrHdnRT-AjirQEaA-1" parent="eEeJIrHdnRT-AjirQEaA-0" />
-        <mxCell id="0Raq0PDP7LIj2Z_Kb9lF-3" value="commit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;" parent="eEeJIrHdnRT-AjirQEaA-1" source="eEeJIrHdnRT-AjirQEaA-3" target="eEeJIrHdnRT-AjirQEaA-5" edge="1">
+        <mxCell id="0Raq0PDP7LIj2Z_Kb9lF-3" value="push" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;fontSize=16;" parent="eEeJIrHdnRT-AjirQEaA-1" source="eEeJIrHdnRT-AjirQEaA-3" target="eEeJIrHdnRT-AjirQEaA-5" edge="1">
           <mxGeometry relative="1" as="geometry" />
         </mxCell>
         <mxCell id="eEeJIrHdnRT-AjirQEaA-3" value="Source&lt;br style=&quot;font-size: 16px;&quot;&gt;code" style="verticalLabelPosition=bottom;html=1;verticalAlign=top;align=center;strokeColor=none;fillColor=#00BEF2;shape=mxgraph.azure.code_file;pointerEvents=1;fontSize=16;" parent="eEeJIrHdnRT-AjirQEaA-1" vertex="1">
@@ -118,13 +118,31 @@
           <mxGeometry x="324" y="480" width="520" height="67" as="geometry" />
         </mxCell>
         <mxCell id="op0E8AwBHjRlD5KEpdxR-3" value="https://habr.com/ru/company/southbridge/blog/329262/" style="html=1;strokeWidth=1;shadow=0;dashed=0;shape=mxgraph.ios7ui.url;fillColor=#e0e0e0;strokeColor=#c0c0c0;buttonText=;strokeColor2=#222222;fontColor=#222222;fontSize=16;spacingTop=2;align=center;" parent="eEeJIrHdnRT-AjirQEaA-1" vertex="1">
-          <mxGeometry x="339" y="547" width="491" height="12.5" as="geometry" />
+          <mxGeometry x="338.5" y="600" width="491" height="12.5" as="geometry" />
         </mxCell>
         <mxCell id="op0E8AwBHjRlD5KEpdxR-4" value="Current CI/CD process" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="eEeJIrHdnRT-AjirQEaA-1" vertex="1">
           <mxGeometry x="432" y="130" width="304" height="30" as="geometry" />
         </mxCell>
         <mxCell id="op0E8AwBHjRlD5KEpdxR-6" value="Example of possible CI/CD process" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=20;" parent="eEeJIrHdnRT-AjirQEaA-1" vertex="1">
           <mxGeometry x="395" y="450" width="378" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-0" value="Code" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="320" y="540" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-1" value="Github" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=16;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="410" y="540" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-4" value="Travis CI" style="text;whiteSpace=wrap;html=1;fontSize=16;align=center;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="489" y="540" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-5" value="Better Code &lt;br&gt;Hub" style="text;whiteSpace=wrap;html=1;fontSize=16;align=center;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="559" y="540" width="140" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-6" value="Docker Hub" style="text;whiteSpace=wrap;html=1;fontSize=16;align=center;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="670" y="540" width="110" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="84tbjh2Nx820AtMyLVv4-7" value="Heroku" style="text;whiteSpace=wrap;html=1;fontSize=16;align=center;" vertex="1" parent="eEeJIrHdnRT-AjirQEaA-1">
+          <mxGeometry x="780" y="540" width="80" height="30" as="geometry" />
         </mxCell>
       </root>
     </mxGraphModel>
