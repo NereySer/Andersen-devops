@@ -64,19 +64,11 @@ svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/default > /
 svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/index.nginx-debian.html > /var/www/html/index.nginx-debian.html
 sudo service nginx restart
 
-su admin
-
-mkdir ~/app1
-cd ~/app1
-svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app1/rebuild > ./rebuild
-chmod +x rebuild
-./rebuild
-
-mkdir ~/app2
-cd ~/app2
-svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/app2/rebuild > ./rebuild
-chmod +x rebuild
-./rebuild
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/init_apps > ./init_apps
+chmod +x init_apps
+sudo -u admin ./init_apps app1
+sudo -u admin ./init_apps app2
+rm init_apps
 
 EOF
 }
