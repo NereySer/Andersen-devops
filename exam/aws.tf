@@ -4,6 +4,10 @@ terraform {
       source  = "hashicorp/aws"
       version = "~> 3.27"
     }
+    github = {
+      source  = "integrations/github"
+      version = "~> 4.0"
+    }
   }
 
   required_version = ">= 0.14.9"
@@ -12,6 +16,15 @@ terraform {
 provider "aws" {
   profile = "default"
   region  = var.region
+}
+
+provider "github" {
+  token = var.GIT_ACCESS_TOKEN
+}
+
+variable "GIT_ACCESS_TOKEN" {
+  type    = string
+  default = ""
 }
 
 variable "region" {
@@ -58,17 +71,35 @@ resource "aws_instance" "applications" {
   tags                   = {}
   user_data              = <<EOF
 #!/bin/bash
-sudo apt update && sudo apt install -y nginx subversion docker.io
+sudo apt update && sudo apt install -y nginx subversion docker.io apache2 php libapache2-mod-php
+
+sudo service nginx stop
+sudo service apache2 stop
+
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/system/sudoers > /etc/sudoers.d/www-data
+
+rm /var/www/html/*
 
 svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/default > /etc/nginx/sites-available/default
 svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/nginx/index.nginx-debian.html > /var/www/html/index.nginx-debian.html
-sudo service nginx restart
 
-svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/init_apps > ./init_apps
-chmod +x init_apps
-sudo -u admin ./init_apps app1
-sudo -u admin ./init_apps app2
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/apache/ports.conf > /etc/apache2/ports.conf
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/apache/000-default.conf > /etc/apache2/sites-available/000-default.conf
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/apache/rebuild.php > /var/www/html/rebuild.php
+
+sudo service nginx restart
+sudo service apache2 restart
+
+cd /bin
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/system/init_app > ./init_app
+chmod +x init_app
+sudo -u admin ./init_app app1
+sudo -u admin ./init_app app2
 rm init_apps
+
+cd /home/admin
+svn cat https://github.com/NereySer/Andersen-devops/trunk/exam/system/rebuild_app > ./rebuild_app
+chmod +x rebuild_app
 
 EOF
 }
@@ -99,5 +130,21 @@ resource "aws_security_group" "allow_app_traffic" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 
+}
+
+resource "github_repository_webhook" "foo" {
+  count = var.GIT_ACCESS_TOKEN == "" ? 0 : 1
+
+  repository = "Andersen-devops"
+
+  configuration {
+    url          = format("http://%s/rebuild.php", aws_instance.applications.public_dns)
+    content_type = "form"
+    insecure_ssl = false
+  }
+
+  active = true
+
+  events = ["push"]
 }
 
