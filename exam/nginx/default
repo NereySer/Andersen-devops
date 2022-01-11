@@ -51,6 +51,15 @@ server {
 		try_files $uri $uri/ =404;
 	}
 
+        location /rebuild.php {
+            proxy_pass                          http://127.0.0.1:5005/rebuild.php;
+            proxy_set_header  Host              $http_host;
+            proxy_set_header  X-Real-IP         $remote_addr;
+            proxy_set_header  X-Forwarded-For   $proxy_add_x_forwarded_for;
+            proxy_set_header  X-Forwarded-Proto $scheme;
+            proxy_read_timeout                  900;
+        }
+
         location ~ /app1/(?<section>.*) {
             proxy_pass                          http://127.0.0.1:5000/$section;
             proxy_set_header  Host              $http_host;
