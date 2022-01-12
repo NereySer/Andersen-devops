@@ -6,6 +6,7 @@ Requires the awscli with configured credentials. Avalible variables:
 * vpc_id - id of the VPC to create VM. Default is "vpc-021ca6cda34354a3a".
 * subnet_id - subnets id to create VM. Default is "subnet-028cdc74e61702420".
 * av_zone - availability zones to create VM. Default is "us-west-2a".
+* GIT_ACCESS_TOKEN - token to access git webhook. Default is "". If not provided, webhook is not created.
 
 # Behavior
 Creates EC2 instance, downloads the rebuild scripts from this repository and runs them. Rebuild scripts are made to download or update source files and Dockerfile, then to build an image and to start new container for each application. After that the scripts purify unnecessary data.
