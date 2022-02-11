@@ -132,7 +132,7 @@ resource "aws_security_group" "allow_app_traffic" {
 
 }
 
-resource "github_repository_webhook" "foo" {
+resource "github_repository_webhook" "main" {
   count = var.GIT_ACCESS_TOKEN == "" ? 0 : 1
 
   repository = "Andersen-devops"
